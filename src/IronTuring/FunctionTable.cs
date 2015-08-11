@@ -17,15 +17,7 @@ namespace IronTuring
             public string argName;
             public Type argType;
         }
-        public MethodInfo methodDefinition
-        {
-            get
-            {
-                if (methodBuilder != null)
-                    return methodBuilder;
-                return methodInfo;
-            }
-        }
+        public MethodInfo methodDefinition => methodBuilder ?? methodInfo;
         MethodBuilder methodBuilder;
         MethodInfo methodInfo;
         public List<Argument> arguments;
@@ -49,16 +41,13 @@ namespace IronTuring
     {
         Dictionary<string, Type> importedModules = new Dictionary<string, Type>();
         public Dictionary<string, FunctionDefinition> functionTable = new Dictionary<string, FunctionDefinition>();
-        public void AddHeader(string functionName, FunctionDefinition functionDefinition)
-        {
-            functionTable.Add(functionName, functionDefinition);
-        }
+        public void AddHeader(string functionName, FunctionDefinition functionDefinition) => functionTable.Add(functionName, functionDefinition);
         public FunctionDefinition this[string functionName]
         {
             get
             {
-                if (this.functionTable.ContainsKey(functionName))
-                    return this.functionTable[functionName];
+                if (functionTable.ContainsKey(functionName))
+                    return functionTable[functionName];
                 if (functionName.Contains("."))//then it is a member call, and we should look in importedModules
                 {
                     int lastPeriod = functionName.LastIndexOf('.');
@@ -67,12 +56,12 @@ namespace IronTuring
                     FunctionDefinition def = new FunctionDefinition(importedModules[className].GetMethod(funcName));
                     return def;
                 }
-                throw new Exception(String.Format("Function {0} has not been declared", functionName));
+                throw new Exception($"Function {functionName} has not been declared");
             }
         }
         public bool ContainsKey(string functionName)
         {
-            if (this.functionTable.ContainsKey(functionName))
+            if (functionTable.ContainsKey(functionName))
                 return true;
             if (functionName.Contains("."))//then it is a member call, and we should look in importedModules
             {
@@ -92,7 +81,7 @@ namespace IronTuring
         {
             if (location == null)
                 location = name + ".dll";
-            var assembly = System.Reflection.Assembly.LoadFrom(location);
+            var assembly = Assembly.LoadFrom(location);
             var type = assembly.GetType(name);
             TypeBuilder typeBuild;
             importedModules.Add(name, type);

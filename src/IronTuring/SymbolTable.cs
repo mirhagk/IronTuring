@@ -61,7 +61,7 @@ namespace IronTuring
                         return;
                     }
                 }
-                throw new System.Exception("undeclared variable '" + ident + "'");
+                throw new Exception("undeclared variable '" + ident + "'");
             }
             il.Emit(OpCodes.Ldloc, locals[ident]);
         }
@@ -79,9 +79,9 @@ namespace IronTuring
                     return parameters[i].Item2;
                 }
             }
-            throw new System.Exception("undeclared variable '" + ident + "'");
+            throw new Exception("undeclared variable '" + ident + "'");
         }
-        public void Store(string name, System.Type type, ILGenerator il)
+        public void Store(string name, Type type, ILGenerator il)
         {
             if (locals.ContainsKey(name))
             {
@@ -93,7 +93,7 @@ namespace IronTuring
                 }
                 else
                 {
-                    throw new System.Exception("'" + name + "' is of type " + locb.LocalType.Name + " but attempted to store value of type " + type.Name);
+                    throw new Exception("'" + name + "' is of type " + locb.LocalType.Name + " but attempted to store value of type " + type.Name);
                 }
                 return;
             }
@@ -105,7 +105,7 @@ namespace IronTuring
                     return;
                 }
             }
-            throw new System.Exception("undeclared variable '" + name + "'");
+            throw new Exception("undeclared variable '" + name + "'");
         }
         int lastAnonNum = 0;
         public Type CreateNewType(ParseTreeNode stmt, string name = null, string typeName = "__Program")
@@ -113,7 +113,7 @@ namespace IronTuring
             if (name == null)
             {
                 lastAnonNum++;
-                name = String.Format("__Anonymous{0}", lastAnonNum);
+                name = string.Format("__Anonymous{0}", lastAnonNum);
             }
             var t = typeTable.types.Where(x => x.type.Name == typeName).First().typeBuilder.DefineNestedType(name);
             //this should be passed the vartype and it'll create a type from it

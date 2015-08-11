@@ -14,20 +14,11 @@ namespace IronTuring
         public TypeBuilder typeBuilder;
         Type internalType;
         public FunctionTable functionTable = new FunctionTable();
-        public Type type
-        {
-            get
-            {
-                if (typeBuilder != null)
-                    //throw new NotSupportedException();
-                    return typeBuilder;
-                return internalType;
-            }
-        }
+        public Type type => typeBuilder ?? internalType;
 
         public TypeDefintion(Type type)
         {
-            this.internalType = type;
+            internalType = type;
         }
         public TypeDefintion(TypeBuilder typeBuilder)
         {
