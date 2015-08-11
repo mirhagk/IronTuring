@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\BlockStatement.cs" />
+    <Compile Include="AST\ForLoop.cs" />
     <Compile Include="AST\Loop.cs" />
     <Compile Include="AST\Node.cs" />
     <Compile Include="CodeGen.cs" />
@@ -61,6 +62,9 @@
     <None Include="lib\Console.tu" />
     <None Include="lib\stdLib.tu" />
     <None Include="packages.config" />
+    <None Include="test.t">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TuringGrammar\TuringGrammar.csproj">

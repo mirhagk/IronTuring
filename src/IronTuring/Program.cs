@@ -15,7 +15,7 @@ namespace IronTuring
         public delegate void Test1();
         static void Main(string[] args)
         {
-            var rootNode = getRoot(System.IO.File.ReadAllText("test1.t"), new TSharpCompiler.TuringGrammarBroken());
+            var rootNode = getRoot(System.IO.File.ReadAllText("test.t"), new TSharpCompiler.TuringGrammarBroken());
             if (rootNode == null)
                 Console.WriteLine("Parsing failed");
             else

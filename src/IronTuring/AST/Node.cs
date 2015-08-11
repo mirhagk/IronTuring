@@ -17,10 +17,9 @@ namespace IronTuring.AST
         {
             if (!CanReduce)//if this is as reduced as it goes then this method must be overriden
                 throw new NotSupportedException("This is a reduced node, it must implement GenerateIL");
+
             foreach(Statement node in Reduce())
-            {
                 node.GenerateIL(il, st);
-            }
         }
     }
     abstract class Expression : Statement { }
