@@ -11,147 +11,13 @@ using System.Reflection;
 namespace IronTuring
 {
     /// <summary>
-    /// A function definition. Stores all of the required information to generate and call the functions
-    /// </summary>
-    public class FunctionDefinition
-    {
-        public class Argument
-        {
-            public string argName;
-            public Type argType;
-        }
-        public MethodInfo methodDefinition
-        {
-            get
-            {
-                if (methodBuilder != null)
-                    return methodBuilder;
-                return methodInfo;
-            }
-        }
-        MethodBuilder methodBuilder;
-        MethodInfo methodInfo;
-        public List<Argument> arguments;
-        public FunctionDefinition(MethodBuilder methodBuilder, List<Argument> arguments)
-        {
-            this.methodBuilder = methodBuilder;
-            this.arguments = arguments;
-        }
-        public FunctionDefinition(MethodInfo methodInfo)
-        {
-            this.methodInfo = methodInfo;
-        }
-        public ILGenerator GetILGenerator()
-        {
-            if (methodBuilder == null)
-                throw new Exception("Can't get generator for imported function");
-            return methodBuilder.GetILGenerator();
-        }
-    }
-    public class FunctionTable
-    {
-        Dictionary<string, Type> importedModules = new Dictionary<string, Type>();
-        public Dictionary<string, FunctionDefinition> functionTable = new Dictionary<string, FunctionDefinition>();
-        public void AddHeader(string functionName, FunctionDefinition functionDefinition)
-        {
-            functionTable.Add(functionName, functionDefinition);
-        }
-        public FunctionDefinition this[string functionName]
-        {
-            get
-            {
-                if (this.functionTable.ContainsKey(functionName))
-                    return this.functionTable[functionName];
-                if (functionName.Contains("."))//then it is a member call, and we should look in importedModules
-                {
-                    int lastPeriod = functionName.LastIndexOf('.');
-                    string className = functionName.Substring(0, lastPeriod);
-                    string funcName = functionName.Substring(lastPeriod + 1);
-                    FunctionDefinition def = new FunctionDefinition(importedModules[className].GetMethod(funcName));
-                    return def;
-                }
-                throw new Exception(String.Format("Function {0} has not been declared", functionName));
-            }
-        }
-        public bool ContainsKey(string functionName)
-        {
-            if (this.functionTable.ContainsKey(functionName))
-                return true;
-            if (functionName.Contains("."))//then it is a member call, and we should look in importedModules
-            {
-                int lastPeriod = functionName.LastIndexOf('.');
-                string className = functionName.Substring(0, lastPeriod);
-                string funcName = functionName.Substring(lastPeriod + 1);
-                if (importedModules.ContainsKey(className))
-                {
-                    return importedModules[className].GetMethod(funcName) != null;
-                }
-            }
-            return false;
-        }
-
-
-        public void AddLibrary(string name, string location = null)
-        {
-            if (location == null)
-                location = name + ".dll";
-            var assembly = System.Reflection.Assembly.LoadFrom(location);
-            var type = assembly.GetType(name);
-            TypeBuilder typeBuild;
-            importedModules.Add(name, type);
-        }
-    }
-    /// <summary>
-    /// A type definition. Encapsulates types that might be either imported or defined by the program
-    /// </summary>
-    public class TypeDefintion
-    {
-        public TypeBuilder typeBuilder;
-        Type internalType;
-        public FunctionTable functionTable = new FunctionTable();
-        public Type type
-        {
-            get
-            {
-                if (typeBuilder != null)
-                    //throw new NotSupportedException();
-                    return typeBuilder;
-                return internalType;
-            }
-        }
-
-        public TypeDefintion(Type type)
-        {
-            this.internalType = type;
-        }
-        public TypeDefintion(TypeBuilder typeBuilder)
-        {
-            this.typeBuilder = typeBuilder;
-        }
-
-        internal void AddFunctionHeader(string functionName, MethodAttributes methodAttributes, Type returnType, FunctionDefinition.Argument[] parameters)
-        {
-            var meth=typeBuilder.DefineMethod(functionName, methodAttributes, CallingConventions.Standard, returnType, parameters.Select(x=>x.argType).ToArray());
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                meth.DefineParameter(i + 1, ParameterAttributes.In, parameters[i].argName);
-            }
-            var function = new FunctionDefinition(meth, parameters.ToList());
-            functionTable.AddHeader(functionName, function);           
-        }
-    }
-    public class TypeTable
-    {
-        public List<TypeDefintion> types = new List<TypeDefintion>();
-    }
-    /// <summary>
     /// The point of this class is to gather together the local variables available to a scope, as well as the arguments it can access.
     /// </summary>
     public class SymbolTable
     {
         public TypeTable typeTable = new TypeTable();
         public Dictionary<string, LocalBuilder> locals = new Dictionary<string, LocalBuilder>();
-        public List<Tuple<string, Type>> parameters = new List<Tuple<string, Type>>();
+        List<Tuple<string, Type>> parameters = new List<Tuple<string, Type>>();
         SymbolTable parentTable = null;
         public FunctionTable functionTable
         {
@@ -172,14 +38,8 @@ namespace IronTuring
             this.parentTable = parentTable;
         }
         public List<TypeBuilder> types = new List<TypeBuilder>();
-        public void AddLocal(string ident, LocalBuilder localBuilder)
-        {
-            locals.Add(ident, localBuilder);
-        }
-        public void RemoveLocal(string identName)
-        {
-            locals.Remove(identName);
-        }
+        public void AddLocal(string ident, LocalBuilder localBuilder) => locals.Add(ident, localBuilder);
+        public void RemoveLocal(string identName) => locals.Remove(identName);
         public bool HasVar(string ident)
         {
             if (locals.ContainsKey(ident))
@@ -188,10 +48,7 @@ namespace IronTuring
                 return true;
             return false;
         }
-        public void AddParameter(string ident, Type type)
-        {
-            parameters.Add(new Tuple<string, Type>(ident, type));
-        }
+        public void AddParameter(string ident, Type type) => parameters.Add(Tuple.Create(ident, type));
         public void PushVar(string ident, ILGenerator il)
         {
             if (!locals.ContainsKey(ident))
@@ -283,7 +140,6 @@ namespace IronTuring
         {
             var type = typeTable.types.Single(x => x.type.Name == typeName);
             type.AddFunctionHeader(functionName, methodAttributes, returnType, parameters);
-            //throw new NotImplementedException();
         }
     }
 }
