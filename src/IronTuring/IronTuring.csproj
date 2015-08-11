@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AST\BlockStatement.cs" />
+    <Compile Include="AST\Loop.cs" />
+    <Compile Include="AST\Node.cs" />
     <Compile Include="CodeGen.cs" />
     <Compile Include="CodeGenOld.cs" />
     <Compile Include="FunctionTable.cs" />

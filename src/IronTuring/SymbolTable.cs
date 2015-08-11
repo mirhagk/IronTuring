@@ -15,6 +15,7 @@ namespace IronTuring
     /// </summary>
     public class SymbolTable
     {
+        public Label? ExitScope { get; }
         public TypeTable typeTable = new TypeTable();
         public Dictionary<string, LocalBuilder> locals = new Dictionary<string, LocalBuilder>();
         List<Tuple<string, Type>> parameters = new List<Tuple<string, Type>>();
@@ -33,9 +34,10 @@ namespace IronTuring
         {
             typeTable.types.Add(new TypeDefintion(mainClass));
         }
-        public SymbolTable(SymbolTable parentTable)
+        public SymbolTable(SymbolTable parentTable, Label? exitScope = null)
         {
             this.parentTable = parentTable;
+            ExitScope = exitScope;
         }
         public List<TypeBuilder> types = new List<TypeBuilder>();
         public void AddLocal(string ident, LocalBuilder localBuilder) => locals.Add(ident, localBuilder);
