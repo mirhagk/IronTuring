@@ -1,0 +1,54 @@
+IronTuring 0.1 Library Specification
+====================================
+
+Definitions
+--------
+
+- **System: <a id=system></a>** A system referred to by this specification is any tools, software or hardware, that are involved in any part of the wider process of tranforming text entered by the user into machine code to be run by a machine (whether virtual or physical). This includes, but is not limited to:
+ - compilers
+ - lexical analyzers
+ - parsers
+ - editors
+ - syntax highlighters
+ - scripting engines
+
+ Any of the above (or other tools that fall under the above description) that are not specific to Turing, or do not claim to fully support Turing is not considered to be a turing system, and is reffered to as a **foreign system**. As an example this includes generic text editors, which need not conform to this document (but may if they so choose). If a **system** interacts in some way with a **foreign system** then it is up to the original **system** to ensure that this specification is met.
+
+- **Program:<a id=Program></a>** An executable file, source code or any intermediate representation of software written by a programmer. This applies only to **programs** written in Turing.
+
+- **Consumer<a id=consumer></a>:** Ultimate end user of a **program**. The **consumer** is a generic person who is not expected to be a programmer, and not expected to use **libraries** or any source code.
+
+- **Application:<a id=application></a>** A program that is written by a programmer to be distributed directly to a consumer. **Applications** are not designed for linking and using in another **application**, in that way **applications** are the final product.
+
+- **Library:<a id=library></a>** An program designed to be used by another **program**, whether it's another **library** or an **application**.
+
+File Extensions
+--------
+
+The following file extensions are associated with existing Turing 4.1:  
+
+- .t
+- .ti
+- .tu
+- .tur
+- .dem
+
+However Turing 4.1 did not clearly distinguish what these different extensions did. This specification proposes a new standard for file extensions. Any **[system][]** must accept any of the above file extensions as interchangeable in terms of accepting it is a valid source code file. **Systems** do not follow the below rules, they treat all supported extensions the same. These rules are merely suggestions for programmers (application or libary programmers) to follow in order to provide additional clarity as to what the file holds.
+
+- .t Files should contain code for an **[application][]**
+- .ti Files should containt code to be included using an include statement into an **[application][]** or **[library][]**
+- .tu Files should contain code for units, which are either classes or modules
+- .tur and .dem files are reserved for future use.
+
+This extension format makes sense, the majority of **[applications][]** already use the .t extension. .ti Stands for "Turing Include" and .tu stands for "Turing Unit".
+
+Distribution Format for Libraries
+--------------
+
+**[Libraries][]** are vitally important to the continued existence of any programming language. Not having to reinvent the wheel is a great thing, and it allows even new programmers to build great **[applications][]**.
+
+[system]: #system
+[applications]: #application
+[application]: #application
+[library]: #library
+[libraries]: #library

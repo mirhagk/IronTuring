@@ -1,0 +1,516 @@
+variableId => id
+
+variableReference => variableId
+                  => variableId componentSelector
+
+constantId => id
+
+constantReference => constantId
+                  => constantId componentSelector
+
+explicitTrueFalseConstant => true
+                          => false
+
+explicitConstant => explicitStringConstant
+                 => explicitIntegerConstant
+                 => explicitRealConstant
+                 => explicitTrueFalseConstant
+                 => explicitCharConstant
+
+infixOperator => +
+              => -
+              => *
+              => /
+              => div
+              => mod
+              => rem
+              => **
+              => <
+              => >
+              => =
+              => <=
+              => >=
+              => not=
+              => and
+              => or
+              => =>
+              => in
+              => not in
+              => shr
+              => shl
+              => xor
+
+prefixOperator => +
+               => -
+               => not
+               => #
+               => ^
+
+leftPosition => expn
+             => *
+             => * - expn
+
+rightPosition => expn
+              => *
+              => * - expn
+
+charPosition => expn
+             => *
+             => * - expn
+
+stringReference => variableReference
+
+substring => stringReference ( leftPosition .. rightPosition )
+          => stringReference ( charPosition )
+
+functionId => variableReference
+
+moduleId => variableReference
+
+classId => variableReference
+
+pointerId => variableReference
+
+functionReference => moduleId . functionId
+                  => functionId
+                  => classId ( pointerId ) . functionId
+                  => pointerId -> functionId
+
+functionCall => functionReference
+             => functionReference ( )
+             => functionReference ( expnList )
+
+setTypeId => variableReference
+
+membersOfSet => expnList
+             => all
+
+setConstructor => setTypeId ( membersOfSet )
+               => setTypeId ( )
+
+enumeratedTypeId => variableReference
+
+enumeratedId => id
+
+enumeratedValue => enumeratedTypeId . enumeratedId
+
+expn => explicitConstant
+     => variableReference
+     => constantReference
+     => expn infixOperator expn
+     => prefixOperator expn
+     => ( expn )
+     => substring
+     => functionCall
+     => setConstructor
+     => enumeratedValue
+
+expnList => expn
+         => expn , expn
+
+fieldId => id
+
+componentSelector => (  expnList )
+                  => . fieldId
+
+maximumLength => expn
+
+numberOfCharacters => expn
+
+standardType => int
+             => real
+             => stringType
+             => boolean
+             => nat
+             => int1
+             => int2
+             => int4
+             => nat1
+             => nat2
+             => nat4
+             => real4
+             => real8
+             => char
+             => char ( numberOfCharacters )
+
+subrangeType => expn .. expn
+
+typeDeclaration => type id : typeSpec
+                => type id : forward
+
+stringType => string
+           => string ( maximumLength )
+
+idList => id
+       => id, idList
+
+enumeratedType => enum ( idList )
+
+indexType => subrangeType
+          => enumeratedType
+          => namedType
+          => char
+          => boolean
+
+indexTypeList => indexType
+              => indexType , indexTypeList
+
+arrayFlexible => flexible
+              => ?
+
+arrayType => arrayFlexible array indexTypeList of typeSpec
+
+setType => set of typeSpec
+
+recordField => idList : typeSpec
+
+recordFieldList => recordField
+                => recordField recordFieldList
+
+recordType => record recordFieldList end record
+
+labelExpn => expn
+
+labelExpnList => labelExpn
+              => labelExpn , labelExpnList
+
+unionLabelList => label labelExpnList : idList : typeSpec
+               => label labelExpnList :
+
+unionEndLabel => label : idList : typeSpec
+              => label :
+
+unionType => union : indexType of unionLabelList end union
+          => union id : indexType of unionLabelList end union
+          => union : indexType of unionLabelList unionEndLabel end union
+          => union id : indexType of unionLabelList unionEndLabel end union
+
+collectionId => variableReference
+
+pointerType => pointer to collectionId
+            => unchecked pointer to collectionId
+            => ^ collectionId
+            => pointer to classId
+            => unchecked pointer to classId
+            => ^ classId
+            => pointer to typeSpec
+            => unchecked pointer to typeSpec
+            => ^ typeSpec
+
+namedType => variableReference
+
+typeSpec => int
+         => real
+         => boolean
+         => stringType
+         => subrangeType
+         => enumeratedType
+         => arrayType
+         => setType
+         => recordType
+         => unionType
+         => pointerType
+         => namedType
+         => nat
+         => int1
+         => int2
+         => int4
+         => nat1
+         => nat2
+         => nat4
+         => real4
+         => real8
+         => char
+         => char ( numberOfCharacters )
+         => subprogramType
+
+subprogramType => subprogramHeader
+
+paramDeclaration => idList : typeSpec
+                 => var idList : typeSpec
+                 => subprogramHeader
+
+paramList => paramDeclaration
+          => paramDeclaration , paramList
+
+subParams => ( paramList )
+          => ( )
+          => ?
+
+subPervasive => pervasive
+             => ?
+
+subDevice => : deviceSpecification
+          => ?
+
+subprogramHeader => procedure subPervasive id subParams subDevice
+                 => function subPervasive id subParams : typeSpec
+                 => function subPervasive id subParams id : typeSpec
+
+subBody => body
+        => ?
+
+trueFalseExpn => expn
+
+subPre => pre trueFalseExpn
+       => ?
+
+initList => id := expn
+         => id := expn , initList
+
+subInit => init initList
+        => ?
+
+subPost => post trueFalseExpn
+        => ?
+
+subExcept => exceptionHandler
+          => ?
+
+subprogramDeclaration => subBody subprogramHeader subPre subInit subPost subExcept statementsAndDeclarations end id
+                      => body id statementsAndDeclarations end id
+
+assignmentOp => :=
+             => +=
+             => -=
+             => *=
+             => /=
+             => div=
+             => mod=
+             => rem=
+             => shl=
+             => shr=
+             => xor=
+
+assignmentStatement => variableReference assignmentOp expn
+
+beginStatement => begin statementsAndDeclarations end
+
+bindList => id to variableReference
+         => var id to variableReference
+         => id to variableReference , bindList
+         => var id to variableReference , bindList
+         => register id to variableReference
+         => var register id to variableReference
+         => register id to variableReference , bindList
+         => var register id to variableReference , bindList
+
+bindDeclaration => bind bindList
+
+compileTimeExpn => expn
+
+compileTimeExpnList => compileTimeExpn
+                    => compileTimeExpn , compileTimeExpnList
+
+caseLabel => label compileTimeExpnList : statementsAndDeclarations
+
+caseLabelList => caseLabel
+              => caseLabel , caseLabelList
+
+caseLabels => caseLabelList
+           => ?
+
+caseDefaultLabel => label : statementsAndDeclarations
+                 => ?
+
+caseStatement => case expn of caseLabels caseDefaultLabel end case
+
+typeId => variableReference
+       => id : variableReference
+
+targetType => typeId
+           => int
+           => int1
+           => int2
+           => int4
+           => nat
+           => nat1
+           => nat2
+           => nat4
+           => boolean
+           => char
+           => char ( numberOfCharacters )
+           => string
+           => string ( maximumLength )
+           => addressint
+
+compileTimeIntExpn => expn
+
+sizeSpec => : compileTimeIntExpn
+         => ?
+
+typeCheat => cheat ( targetType, expn sizeSpec )
+          => # expn
+          => id : cheat typeSpec
+
+classMonitor => monitor
+             => ?
+
+inheritItem => id
+
+classInherit => inherit inheritItem
+             => ?
+
+implementItem => id
+
+classImplement => implement implementItem
+               => ?
+
+implementByItem id
+
+classBy => implement by implementByItem
+        => ?
+
+howImport => var
+          => const
+          => forward
+          => ?
+
+importItem => howImport id
+           => howImport id in fileName
+           => ( howImport id )
+           => ( howImport id in fileName )
+
+importList => importItem
+           => importItem , importList
+
+classImport => import importList
+            => ?
+
+exportMethod => var
+             => unqualified
+             => pervasive
+             => opaque
+
+howExport => exportMethod howExport
+          => ?
+
+exportItem => howExport id
+
+exportList => exportItem
+           => exportItem, exportList
+
+classExport => export exportList
+            => export all
+            => ?
+
+classDeclaration => classMonitor class id classInherit classImplement classBy classImport classExport statementsAndDeclarations end id
+
+fileNumber => expn
+
+closeStatement => close : fileNumber
+               => close ( fileNumber : int )
+
+collectionCheck => unchecked
+                => ?
+
+collectionDeclaration => var idList : collectionCheck collection of typeSpec
+                      => var idList : collectionCheck collection of forward typeId
+
+comparisonOperator => <
+                   => >
+                   => =
+                   => <=
+                   => >=
+                   => not=
+
+conditionArray => array indexTypeList of
+               => ?
+
+conditionOption => priority
+                => deferred
+                => timeout
+                => ?
+
+conditionDeclaration => var idList : conditionArray conditionOption condition
+
+constTypeSpec => : typeSpec
+              => ?
+
+initializingValue => expn
+                  => init ( initializingValue, initializingValue )
+
+constPervasive => pervasive
+               => ?
+
+constRegister => register
+              => ?
+
+constantDeclaration => const constPervasive constRegister id constTypeSpec := initializingValue
+
+declaration => variableDeclaration
+            => constantDeclaration
+            => typeDeclaration
+            => bindDeclaration
+            => procedureDeclaration
+            => functionDeclaration
+            => moduleDeclaration
+            => classDeclaration
+            => processDeclaration
+            => monitorDeclaration
+            => conditionDeclaration
+
+deferredDeclaration => deferred subprogramHeader
+
+exitStatement => exit when trueFalseExpn
+              => exit
+
+externalOverrideName => overrideName
+                     => ?
+
+externalAddressSpec => addressSpec
+                    => ?
+
+externalTypeSpec => : typeSpec
+                 => ?
+
+externalExpn => := expn
+             => ?
+
+externalDeclaration => external externalOverrideName subprogramHeader
+                    => external externalAddressSpec var id externalTypeSpec externalExpn
+
+increment => expn
+
+forIncrement => by increment
+             => ?
+
+integerExpn => expn
+
+rangeId => variableReference
+
+forRange => integerExpn .. integerExpn
+         => rangeId
+
+forId => id
+      => ?
+
+forDecreasing => decreasing
+              => ?
+
+forStatement => for forDecreasing forId : forRange forIncrement statementsAndDeclarations end for
+
+forkExpnList => expnList
+             => ?
+
+forkParams => ( forkExpnList )
+           => ?
+
+forkRefExpnRef => , addressReference
+               => ?
+
+forkRefExpn => , expn forkRefExpnRef
+            => ?
+
+forkReference => : booleanVariableReference forkRefExpn
+              => ?
+
+addressReference => variableReference
+
+booleanVariableReference => variableReference
+
+processId => variableReference
+
+forkStatement => fork processId forkParams forkReference
+
+
