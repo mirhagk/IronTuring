@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace IronTuring
 {
-    class Program
+    public class Program
     {
         public delegate void Test1();
         static void Main(string[] args)
