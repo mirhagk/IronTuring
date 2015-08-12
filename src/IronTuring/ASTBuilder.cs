@@ -9,20 +9,16 @@ namespace IronTuring
 {
     class ASTBuilder
     {
-        ProgramNode Program(ParseTreeNode node)
-        {
-            return new ProgramNode(StatementList(node));
-        }
-        IEnumerable<StatementNode> StatementList(ParseTreeNode node)
+        IEnumerable<T> GetList<T>(ParseTreeNode node, Func<ParseTreeNode,T> function)
         {
             if (node.ChildNodes.Count == 0)
                 yield break;
-            yield return Statement(node.ChildNodes[0]);
-            foreach(var statement in StatementList(node.ChildNodes[1]))
-            {
-                yield return statement;
-            }
+            yield return function(node.ChildNodes[0]);
+            foreach (var n in GetList(node.ChildNodes[1], function))
+                yield return n;
         }
+        IEnumerable<StatementNode> StatementList(ParseTreeNode node) => GetList(node, Statement);
+        ProgramNode Program(ParseTreeNode node) => new ProgramNode(StatementList(node));
         StatementNode Statement(ParseTreeNode node)
         {
             //unwrap the statement
@@ -30,7 +26,6 @@ namespace IronTuring
             if (node.Term.Name == "loop")
             {
                 return new LoopNode(StatementList(node.ChildNodes[0]));
-                //return new LoopNode
             }
             else if (node.Term.Name == "io")
             {
