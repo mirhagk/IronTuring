@@ -6,8 +6,9 @@ using System.Text;
 
 namespace IronTuring.AST
 {
-    class Loop : BlockStatement
+    class LoopNode : BlockStatementNode
     {
+        public LoopNode(IEnumerable<StatementNode> block) : base(block) { }
         public override void GenerateIL(ILGenerator il, SymbolTable st)
         {
             Label beginLoop = il.DefineLabel();

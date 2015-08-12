@@ -24,7 +24,9 @@ namespace IronTuring
                 dispTree(rootNode, 0, file);
                 file.Close();
                 //Console.WriteLine(Compile(rootNode));
-                CodeGen codeGen = new CodeGen(rootNode, "test.exe");
+                //CodeGen codeGen = new CodeGen(rootNode, "test.exe");
+                ASTBuilder builder = new ASTBuilder();
+                builder.BuildAST(rootNode);
                 Console.WriteLine("done");
             }
 

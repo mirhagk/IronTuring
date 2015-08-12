@@ -11,16 +11,16 @@ namespace IronTuring.AST
         public bool CanReduce => Reduce() == null;
         public virtual IEnumerable<Node> Reduce() => null;
     }
-    abstract class Statement : Node
+    abstract class StatementNode : Node
     {
         public virtual void GenerateIL(ILGenerator il, SymbolTable st)
         {
             if (!CanReduce)//if this is as reduced as it goes then this method must be overriden
                 throw new NotSupportedException("This is a reduced node, it must implement GenerateIL");
 
-            foreach(Statement node in Reduce())
+            foreach(StatementNode node in Reduce())
                 node.GenerateIL(il, st);
         }
     }
-    abstract class Expression : Statement { }
+    abstract class ExpressionNode : StatementNode { }
 }

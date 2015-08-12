@@ -33,9 +33,27 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Irony">
-      <HintPath>..\..\DLL\Irony.dll</HintPath>
+      <HintPath>..\references\Irony.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,10 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AST\BlockStatement.cs" />
-    <Compile Include="AST\ForLoop.cs" />
-    <Compile Include="AST\Loop.cs" />
+    <Compile Include="ASTBuilder.cs" />
+    <Compile Include="AST\BlockStatementNode.cs" />
+    <Compile Include="AST\ForLoopNode.cs" />
+    <Compile Include="AST\LoopNode.cs" />
     <Compile Include="AST\Node.cs" />
+    <Compile Include="AST\Unit.cs" />
     <Compile Include="CodeGen.cs" />
     <Compile Include="CodeGenOld.cs" />
     <Compile Include="FunctionTable.cs" />
@@ -63,7 +83,7 @@
     <None Include="lib\stdLib.tu" />
     <None Include="packages.config" />
     <None Include="test.t">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

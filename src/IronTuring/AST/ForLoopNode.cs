@@ -5,8 +5,7 @@ using System.Text;
 
 namespace IronTuring.AST
 {
-    class BlockStatement:Statement
+    class ForLoopNode
     {
-        public IEnumerable<Statement> Block { get; }
     }
 }

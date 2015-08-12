@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Irony">
-      <HintPath>..\IronTuring\bin\Debug\Irony.dll</HintPath>
+      <HintPath>..\references\Irony.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
