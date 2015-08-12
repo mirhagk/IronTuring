@@ -13,4 +13,12 @@ namespace IronTuring.AST
             Block = block.ToList();
         }
     }
+    class BlockNode : StatementNode
+    {
+        public IList<StatementNode> Block { get; }
+        public BlockNode(IEnumerable<StatementNode> block)
+        {
+            Block = (block as IList<StatementNode>) ?? block.ToList();
+        }
+    }
 }
