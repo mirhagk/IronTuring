@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IronTuring.AST
 {
-    class LiteralNode<T> : ExpressionNode
+    abstract class LiteralNode<T> : ExpressionNode
     {
         public virtual T Value { get; }
     }
