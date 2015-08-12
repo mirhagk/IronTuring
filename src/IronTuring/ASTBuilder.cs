@@ -18,6 +18,7 @@ namespace IronTuring
                 yield return n;
         }
         IEnumerable<StatementNode> StatementList(ParseTreeNode node) => GetList(node, Statement);
+        IEnumerable<ExpressionNode> ExpressionList(ParseTreeNode node) => GetList(node, Expression);
         ProgramNode Program(ParseTreeNode node) => new ProgramNode(StatementList(node));
         StatementNode Statement(ParseTreeNode node)
         {
@@ -27,10 +28,26 @@ namespace IronTuring
             {
                 return new LoopNode(StatementList(node.ChildNodes[0]));
             }
-            else if (node.Term.Name == "io")
+            if (node.Term.Name == "io")
             {
+                if (node.ChildNodes[0].Term.Name == "put")
+                {
 
+                    return new PutNode(
+                        ExpressionList(node.ChildNodes[2]).Append(Expression(node.ChildNodes[1])),
+                        node.ChildNodes.Count > 3
+                        );
+                }
             }
+            throw new NotImplementedException();
+        }
+        ExpressionNode Expression(ParseTreeNode node)
+        {
+            if (node.Term.Name == "putItem")
+                return Expression(node.ChildNodes[0]);
+            if (node.Term.Name == "stringLiteral")
+                return new StringLiteralNode(node.Token.ValueString);
+
             throw new NotImplementedException();
         }
         ImportSectionNode ImportSection(ParseTreeNode node)

@@ -67,8 +67,10 @@
     <Compile Include="ASTBuilder.cs" />
     <Compile Include="AST\BlockStatementNode.cs" />
     <Compile Include="AST\ForLoopNode.cs" />
+    <Compile Include="AST\LiteralNode.cs" />
     <Compile Include="AST\LoopNode.cs" />
     <Compile Include="AST\Node.cs" />
+    <Compile Include="AST\PutNode.cs" />
     <Compile Include="AST\Unit.cs" />
     <Compile Include="CodeGen.cs" />
     <Compile Include="CodeGenOld.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="TypeTable.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\Console.tu" />
