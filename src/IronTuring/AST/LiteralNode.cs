@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace IronTuring.AST
@@ -15,6 +16,10 @@ namespace IronTuring.AST
         public StringLiteralNode(string value)
         {
             Value = value;
+        }
+        public override void GenerateIL(ILGenerator il, SymbolTable st)
+        {
+            il.Emit(OpCodes.Ldstr, Value);
         }
     }
 }
