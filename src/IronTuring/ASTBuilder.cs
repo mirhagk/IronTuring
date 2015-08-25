@@ -19,14 +19,14 @@ namespace IronTuring
         }
         IEnumerable<StatementNode> StatementList(ParseTreeNode node) => GetList(node, Statement);
         IEnumerable<ExpressionNode> ExpressionList(ParseTreeNode node) => GetList(node, Expression);
-        ProgramNode Program(ParseTreeNode node) => new ProgramNode(StatementList(node));
+        BlockNode Block(ParseTreeNode node) => new BlockNode(StatementList(node));
         StatementNode Statement(ParseTreeNode node)
         {
             //unwrap the statement
             node = node.ChildNodes[0];
             if (node.Term.Name == "loop")
             {
-                return new LoopNode(StatementList(node.ChildNodes[0]));
+                return new LoopNode(Block(node.ChildNodes[0]));
             }
             if (node.Term.Name == "io")
             {
@@ -58,7 +58,7 @@ namespace IronTuring
         {
             if (stmt.Term.Name == "unit")
             {
-                return new UnitNode(Program(stmt.ChildNodes[1]), ImportSection(stmt.ChildNodes[0]));
+                return new UnitNode(Block(stmt.ChildNodes[1]), ImportSection(stmt.ChildNodes[0]));
             }
             else if (stmt.Term.Name == "program")
             {

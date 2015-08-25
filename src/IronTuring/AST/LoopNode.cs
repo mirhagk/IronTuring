@@ -6,19 +6,18 @@ using System.Text;
 
 namespace IronTuring.AST
 {
-    class LoopNode : BlockStatementNode
+    class LoopNode : StatementNode
     {
-        public LoopNode(IEnumerable<StatementNode> block) : base(block) { }
+        BlockNode Block { get; }
+        public LoopNode(BlockNode block) { Block = block; }
         public override void GenerateIL(ILGenerator il, SymbolTable st)
         {
             Label beginLoop = il.DefineLabel();
             Label endLoop = il.DefineLabel();
             il.MarkLabel(beginLoop);
             var newTable = new SymbolTable(st, endLoop);
-            foreach (var statment in Block)
-            {
-                statment.GenerateIL(il, st);
-            }
+            Block.GenerateIL(il, newTable);
+
             il.Emit(OpCodes.Br, beginLoop);
             il.MarkLabel(endLoop);
         }
