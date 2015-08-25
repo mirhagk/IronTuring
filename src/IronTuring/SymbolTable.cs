@@ -24,7 +24,7 @@ namespace IronTuring
         {
             get
             {
-                var programType = typeTable.types.SingleOrDefault(t => t.type.Name == "__Program");
+                var programType = typeTable.types.SingleOrDefault(t => t.type.Name == "$program");
                 if (programType != null)
                     return programType.functionTable;
                 return parentTable.functionTable;
