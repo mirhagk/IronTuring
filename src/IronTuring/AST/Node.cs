@@ -22,5 +22,8 @@ namespace IronTuring.AST
                 node.GenerateIL(il, st);
         }
     }
-    abstract class ExpressionNode : StatementNode { }
+    abstract class ExpressionNode : StatementNode
+    {
+        public abstract Type TypeOfExpression();
+    }
 }
