@@ -28,6 +28,15 @@ namespace IronTuring
             {
                 return new LoopNode(Block(node.ChildNodes[0]));
             }
+            if (node.Term.Name == "forLoop")
+            {
+
+                return new ForLoopNode(
+                    Block(node.ChildNodes[4]), 
+                    GetRange(node.ChildNodes[2]), 
+                    node.ChildNodes[0].ChildNodes.Count > 0,
+                    Get<string>(node.ChildNodes[1]));
+            }
             if (node.Term.Name == "io")
             {
                 if (node.ChildNodes[0].Term.Name == "put")
@@ -39,16 +48,36 @@ namespace IronTuring
                         );
                 }
             }
+            if (node.Term.Name == "variableDeclaration")
+            {
+                var identifierList = GetPiece(node, "identifierList").ChildNodes.Select(c=>Get<string>(c)).ToList();
+                var setEqualVal = GetPiece(node, "setEqual").ChildNodes[1];
+                return new VariableNode(identifierList, Expression(setEqualVal));
+            }
             throw new NotImplementedException();
+        }
+        ParseTreeNode GetPiece(ParseTreeNode node, string termName)
+        {
+            return node.ChildNodes.SingleOrDefault(n => n.Term.Name == termName);
+        }
+        T Get<T>(ParseTreeNode node)
+        {
+            return (T)node.Token.Value;
         }
         ExpressionNode Expression(ParseTreeNode node)
         {
             if (node.Term.Name == "putItem")
                 return Expression(node.ChildNodes[0]);
             if (node.Term.Name == "stringLiteral")
-                return new StringLiteralNode(node.Token.ValueString);
+                return new StringLiteralNode(Get<string>(node));
+            if (node.Term.Name == "number")
+                return NumberLiteralNode.GetNumber(node.Token.ValueString);
 
             throw new NotImplementedException();
+        }
+        ForLoopNode.LoopRange GetRange(ParseTreeNode node)
+        {
+            return new ForLoopNode.LiteralRange(Get<int>(node.ChildNodes[1]), Get<int>(node.ChildNodes[0]));
         }
         ImportSectionNode ImportSection(ParseTreeNode node)
         {
