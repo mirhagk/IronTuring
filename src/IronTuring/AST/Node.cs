@@ -8,7 +8,7 @@ namespace IronTuring.AST
 {
     abstract class Node
     {
-        public bool CanReduce => Reduce() == null;
+        public virtual bool CanReduce => Reduce() != null;
         public virtual IEnumerable<Node> Reduce() => null;
     }
     abstract class StatementNode : Node
@@ -18,7 +18,7 @@ namespace IronTuring.AST
             if (!CanReduce)//if this is as reduced as it goes then this method must be overriden
                 throw new NotSupportedException("This is a reduced node, it must implement GenerateIL");
 
-            foreach(StatementNode node in Reduce())
+            foreach (StatementNode node in Reduce())
                 node.GenerateIL(il, st);
         }
     }
