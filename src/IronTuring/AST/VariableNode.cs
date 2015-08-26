@@ -34,7 +34,7 @@ namespace IronTuring.AST
             var name = VariableNames[0];
             st.AddLocal(name, il.DeclareLocal(InitialValue.TypeOfExpression()));
             InitialValue.GenerateIL(il, st);
-            il.Emit(OpCodes.Stloc, st.locals[name].LocalIndex);
+            il.Emit(OpCodes.Stloc, st.Locals[name].LocalIndex);
         }
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 
 using System.Reflection.Emit;
 using System.Reflection;
+using System.Collections;
 
 namespace IronTuring
 {
@@ -15,10 +16,39 @@ namespace IronTuring
     /// </summary>
     public class SymbolTable
     {
+        public class LocalTable:IEnumerable<KeyValuePair<string, LocalBuilder>>
+        {
+            SymbolTable symbolTable;
+            public LocalBuilder this[string value]
+            {
+                get
+                {
+                    if (symbolTable.locals.ContainsKey(value))
+                        return symbolTable.locals[value];
+                    if (symbolTable.parentTable != null)
+                        return symbolTable.parentTable.Locals[value];
+                    return null;
+                }
+            }
+            public LocalTable(SymbolTable symbolTable) { this.symbolTable = symbolTable; }
+
+            public IEnumerator<KeyValuePair<string,LocalBuilder>> GetEnumerator()
+            {
+                foreach (var local in symbolTable.locals)
+                    yield return local;
+                if (symbolTable.parentTable != null)
+                    foreach (var local in symbolTable.parentTable.Locals)
+                        yield return local;
+                yield break;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+        Dictionary<string, LocalBuilder> locals = new Dictionary<string, LocalBuilder>();
         public Label? ExitScope { get; }
         public TypeTable typeTable = new TypeTable();
-        public Dictionary<string, LocalBuilder> locals = new Dictionary<string, LocalBuilder>();
         List<Tuple<string, Type>> parameters = new List<Tuple<string, Type>>();
+        public LocalTable Locals;
         SymbolTable parentTable = null;
         public FunctionTable functionTable
         {
@@ -33,10 +63,12 @@ namespace IronTuring
         public SymbolTable(TypeBuilder mainClass)
         {
             typeTable.types.Add(new TypeDefintion(mainClass));
+            Locals = new LocalTable(this);
         }
         public SymbolTable(SymbolTable parentTable, Label? exitScope = null)
         {
             this.parentTable = parentTable;
+            Locals = new LocalTable(this);
             ExitScope = exitScope;
         }
         public List<TypeBuilder> types = new List<TypeBuilder>();

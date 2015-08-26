@@ -65,7 +65,7 @@ namespace IronTuring
             symbolTable.typeTable.types[0].typeBuilder.CreateType();
             
             asmb.Save(moduleName);
-            foreach (var symbol in symbolTable.locals)
+            foreach (var symbol in symbolTable.Locals)
             {
                 Console.WriteLine("{0}: {1}", symbol.Key, symbol.Value);
             }
@@ -284,7 +284,7 @@ namespace IronTuring
                 {
                     generateAssign = new Action<string>(name =>
                     {
-                        this.GenExpr(assign.ChildNodes[1], symbolTable.locals[name].LocalType, il, symbolTable);
+                        this.GenExpr(assign.ChildNodes[1], symbolTable.Locals[name].LocalType, il, symbolTable);
                         symbolTable.Store(name, TypeOfExpr(assign.ChildNodes[1], symbolTable), il);
                     });
                 }
