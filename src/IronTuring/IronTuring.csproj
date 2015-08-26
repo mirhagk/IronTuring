@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ASTBuilder.cs" />
+    <Compile Include="AST\BinaryExpressionNode.cs" />
     <Compile Include="AST\BlockStatementNode.cs" />
     <Compile Include="AST\ForLoopNode.cs" />
     <Compile Include="AST\IdentifierNode.cs" />

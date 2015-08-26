@@ -74,6 +74,8 @@ namespace IronTuring
                 return NumberLiteralNode.GetNumber(node.Token.ValueString);
             if (node.Term.Name == "identifier")
                 return new IdentifierNode(Get<string>(node));
+            if (node.Term.Name == "binExpr")
+                return new BinaryExpressionNode(Get<string>(node.ChildNodes[1]), Expression(node.ChildNodes[0]), Expression(node.ChildNodes[2]));
             throw new NotImplementedException();
         }
         ForLoopNode.LoopRange GetRange(ParseTreeNode node)
