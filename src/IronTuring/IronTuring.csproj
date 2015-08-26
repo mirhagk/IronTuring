@@ -67,6 +67,7 @@
     <Compile Include="ASTBuilder.cs" />
     <Compile Include="AST\BlockStatementNode.cs" />
     <Compile Include="AST\ForLoopNode.cs" />
+    <Compile Include="AST\IdentifierNode.cs" />
     <Compile Include="AST\LiteralNode.cs" />
     <Compile Include="AST\LoopNode.cs" />
     <Compile Include="AST\Node.cs" />

@@ -1,6 +1,7 @@
 var i:=0
 loop
 	put "hi", " ", "what is your name?"
+	put i
 end loop
 
 /*
